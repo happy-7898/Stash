@@ -18,23 +18,42 @@ const syncCategories = async (req, res) => {
 
       if (
         !stashCategory ||
-        !stashCategory.catgeoryId ||
-        !stashCategory.catgeoryName ||
+        !stashCategory.categoryId ||
+        !stashCategory.categoryName ||
         !lastUpdated
       ) {
         await transaction.rollback();
         return sendError(res, "Invalid stash category payload", 400);
       }
 
-      await Category.upsert(
-        {
-          categoryId: stashCategory.catgeoryId,
-          categoryName: stashCategory.catgeoryName,
+      const existing = await Category.findOne({
+        where: {
           userId,
-          lastUpdated: lastUpdated,
+          categoryId: stashCategory.categoryId,
         },
-        { transaction },
-      );
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+
+      if (!existing) {
+        await Category.create(
+          {
+            categoryId: stashCategory.categoryId,
+            categoryName: stashCategory.categoryName,
+            userId,
+            lastUpdated,
+          },
+          { transaction },
+        );
+      } else if (lastUpdated > existing.lastUpdated) {
+        await existing.update(
+          {
+            categoryName: stashCategory.categoryName,
+            lastUpdated,
+          },
+          { transaction },
+        );
+      }
     }
 
     await transaction.commit();
@@ -56,8 +75,8 @@ const getCategories = async (req, res) => {
 
     const response = categories.map((category) => ({
       stashCategory: {
-        catgeoryId: category.categoryId,
-        catgeoryName: category.categoryName,
+        categoryId: category.categoryId,
+        categoryName: category.categoryName,
       },
       lastUpdated: category.lastUpdated,
     }));

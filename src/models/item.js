@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       itemRating: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: true,
       },
       itemStatus: {
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       lastUpdated: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
     },

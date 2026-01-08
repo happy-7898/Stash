@@ -27,8 +27,18 @@ const syncStashItems = async (req, res) => {
         return sendError(res, "Invalid stash item payload", 400);
       }
 
-      await Item.upsert(
-        {
+      const existingItem = await Item.findOne({
+        where: {
+          userId,
+          categoryId: stashItem.stashCategoryId,
+          itemId: stashItem.stashItemId,
+        },
+        transaction,
+        lock: transaction.LOCK.UPDATE,
+      });
+
+      if (!existingItem) {
+        await Item.create({
           itemId: stashItem.stashItemId,
           itemName: stashItem.stashItemName,
           itemUrl: stashItem.stashItemUrl,
@@ -37,9 +47,21 @@ const syncStashItems = async (req, res) => {
           categoryId: stashItem.stashCategoryId,
           userId,
           lastUpdated: lastUpdated,
-        },
-        { transaction },
-      );
+        });
+      } else if (lastUpdated > existingItem.lastUpdated) {
+        await existingItem.update(
+          {
+            itemName: stashItem.stashItemName,
+            itemUrl: stashItem.stashItemUrl,
+            itemRating: stashItem.stashItemRating,
+            itemStatus: stashItem.stashItemCompleted,
+            lastUpdated: lastUpdated,
+          },
+          {
+            transaction,
+          },
+        );
+      }
     }
 
     await transaction.commit();

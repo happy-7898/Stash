@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       },
 
       lastUpdated: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
 

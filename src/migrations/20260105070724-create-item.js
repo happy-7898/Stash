@@ -17,7 +17,7 @@ module.exports = {
         allowNull: true,
       },
       itemRating: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: true,
       },
       itemStatus: {
@@ -26,7 +26,7 @@ module.exports = {
         defaultValue: "not_started",
       },
       lastUpdated: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
       categoryId: {

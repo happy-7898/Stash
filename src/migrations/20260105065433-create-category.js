@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
       },
       lastUpdated: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
       userId: {
