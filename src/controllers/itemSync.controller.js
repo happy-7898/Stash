@@ -41,8 +41,8 @@ const syncStashItems = async (req, res) => {
         await Item.create({
           itemId: stashItem.stashItemId,
           itemName: stashItem.stashItemName,
-          itemUrl: stashItem.stashItemUrl,
-          itemRating: stashItem.stashItemRating,
+          itemUrl: stashItem.stashItemUrl ?? "",
+          itemRating: stashItem.stashItemRating ?? "",
           itemStatus: stashItem.stashItemCompleted,
           categoryId: stashItem.stashCategoryId,
           userId,

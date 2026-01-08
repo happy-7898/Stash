@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       itemStatus: {
-        type: DataTypes.ENUM("not_started", "completed"),
+        type: DataTypes.ENUM("not_started", "in_progress", "completed"),
         allowNull: false,
         defaultValue: "not_started",
       },
